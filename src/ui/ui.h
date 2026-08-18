@@ -15,6 +15,7 @@ typedef enum {
 
 typedef struct {
     char text[UI_DISPLAY_MAX_CHARS + 1];
+    char expression[UI_DISPLAY_MAX_CHARS + 1];
     UiDisplayState state;
 } UiDisplay;
 
@@ -40,6 +41,7 @@ typedef struct {
 void ui_init(void);
 void ui_begin_frame(void);
 void ui_display_set(UiDisplay *display, UiDisplayState state, const char *text);
+void ui_display_set_expression(UiDisplay *display, const char *expression);
 void ui_display_render(const UiDisplay *display);
 UiEvent ui_poll_input(void);
 void ui_render_buttons(void);

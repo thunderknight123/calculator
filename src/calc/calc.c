@@ -156,6 +156,18 @@ static void FormatNumber(double value, char *out, size_t size)
     snprintf(out, size, "%.10g", value);
 }
 
+static const char *OperatorSymbol(CalcOperator op)
+{
+    switch (op)
+    {
+        case CALC_OP_ADD: return "+";
+        case CALC_OP_SUB: return "-";
+        case CALC_OP_MUL: return "x";
+        case CALC_OP_DIV: return "/";
+        default:          return "";
+    }
+}
+
 static void StartNewCalculation(CalcContext *ctx)
 {
     StartFreshOperand(&ctx->input);
@@ -165,6 +177,7 @@ static void StartNewCalculation(CalcContext *ctx)
     ctx->operand1 = 0.0;
     ctx->result = 0.0;
     ctx->state = CALC_STATE_OPERAND1;
+    ctx->operand1Text[0] = '\0';
     SetDisplay(ctx, "0");
 }
 
@@ -226,6 +239,7 @@ void calc_backspace(CalcContext *ctx)
     if (ctx->state == CALC_STATE_OPERATOR)
     {
         ctx->operand1 = calc_input_value(&ctx->input);
+        snprintf(ctx->operand1Text, sizeof(ctx->operand1Text), "%s", calc_input_text(&ctx->input));
     }
     SyncDisplayFromInput(ctx);
 }
@@ -237,6 +251,7 @@ void calc_select_operator(CalcContext *ctx, CalcOperator op)
     if (ctx->state == CALC_STATE_RESULT)
     {
         ctx->operand1 = ctx->result;
+        FormatNumber(ctx->operand1, ctx->operand1Text, sizeof(ctx->operand1Text));
         ctx->input.pendingOp = op;
         ctx->input.secondStarted = false;
         ctx->currentOp = op;
@@ -255,6 +270,7 @@ void calc_select_operator(CalcContext *ctx, CalcOperator op)
     }
 
     ctx->operand1 = calc_input_value(&ctx->input);
+    snprintf(ctx->operand1Text, sizeof(ctx->operand1Text), "%s", calc_input_text(&ctx->input));
     ctx->currentOp = op;
     ctx->input.pendingOp = op;
     ctx->input.secondStarted = false;
@@ -269,15 +285,20 @@ void calc_equals(CalcContext *ctx)
     if (ctx->state == CALC_STATE_OPERATOR)
     {
         ctx->result = ApplyOperator(ctx->currentOp, ctx->operand1, ctx->operand1, ctx);
+        snprintf(ctx->expression, sizeof(ctx->expression), "%s %s %s =",
+                 ctx->operand1Text, OperatorSymbol(ctx->currentOp), ctx->operand1Text);
     }
     else if (ctx->state == CALC_STATE_OPERAND2)
     {
         double operand2 = calc_input_value(&ctx->input);
         ctx->result = ApplyOperator(ctx->currentOp, ctx->operand1, operand2, ctx);
+        snprintf(ctx->expression, sizeof(ctx->expression), "%s %s %s =",
+                 ctx->operand1Text, OperatorSymbol(ctx->currentOp), calc_input_text(&ctx->input));
     }
     else
     {
         ctx->result = calc_input_value(&ctx->input);
+        snprintf(ctx->expression, sizeof(ctx->expression), "%s =", calc_input_text(&ctx->input));
     }
 
     if (ctx->state == CALC_STATE_ERROR) return;
@@ -290,12 +311,19 @@ void calc_clear(CalcContext *ctx)
 {
     if (ctx == NULL) return;
     StartNewCalculation(ctx);
+    ctx->expression[0] = '\0';
 }
 
 const char *calc_display_text(const CalcContext *ctx)
 {
     if (ctx == NULL) return "0";
     return ctx->display;
+}
+
+const char *calc_expression_text(const CalcContext *ctx)
+{
+    if (ctx == NULL) return "";
+    return ctx->expression;
 }
 
 CalcState calc_state(const CalcContext *ctx)

@@ -6,6 +6,7 @@
 
 #define UI_DISPLAY_AREA_HEIGHT 80
 #define UI_DISPLAY_FONT_SIZE 40
+#define UI_DISPLAY_EXPR_FONT_SIZE 18
 #define UI_DISPLAY_PADDING 16
 #define UI_BUTTON_PAD 8
 #define UI_BUTTON_GAP 6
@@ -101,6 +102,14 @@ void ui_display_set(UiDisplay *display, UiDisplayState state, const char *text)
     display->text[UI_DISPLAY_MAX_CHARS] = '\0';
 }
 
+void ui_display_set_expression(UiDisplay *display, const char *expression)
+{
+    if (display == NULL) return;
+    if (expression == NULL) expression = "";
+    strncpy(display->expression, expression, UI_DISPLAY_MAX_CHARS);
+    display->expression[UI_DISPLAY_MAX_CHARS] = '\0';
+}
+
 void ui_display_render(const UiDisplay *display)
 {
     if (display == NULL) return;
@@ -117,10 +126,21 @@ void ui_display_render(const UiDisplay *display)
         textColor = UiColor(220, 60, 60);
     }
 
+    if (display->expression[0] != '\0')
+    {
+        Color exprColor = UiColor(140, 140, 140);
+        int exprWidth = (int)MeasureTextEx(ui_display_font, display->expression, UI_DISPLAY_EXPR_FONT_SIZE, 2).x;
+        Vector2 exprPos = {
+            (float)(UI_WINDOW_WIDTH - UI_DISPLAY_PADDING - exprWidth),
+            4.0f
+        };
+        DrawTextEx(ui_display_font, display->expression, exprPos, UI_DISPLAY_EXPR_FONT_SIZE, 2, exprColor);
+    }
+
     int textWidth = (int)MeasureTextEx(ui_display_font, display->text, UI_DISPLAY_FONT_SIZE, 2).x;
     Vector2 pos = {
         (float)(UI_WINDOW_WIDTH - UI_DISPLAY_PADDING - textWidth),
-        (float)((UI_DISPLAY_AREA_HEIGHT - UI_DISPLAY_FONT_SIZE) / 2)
+        (float)(UI_DISPLAY_AREA_HEIGHT - UI_DISPLAY_FONT_SIZE - 4)
     };
 
     DrawTextEx(ui_display_font, display->text, pos, UI_DISPLAY_FONT_SIZE, 2, textColor);

@@ -1,6 +1,17 @@
 #include "calc.h"
 #include "test_util.h"
 
+static void expect_expression(CalcContext *ctx, const char *expected, const char *msg)
+{
+    const char *actual = calc_expression_text(ctx);
+    test_checks++;
+    if (strcmp(actual, expected) != 0)
+    {
+        test_failures++;
+        printf("FAIL: %s - expected \"%s\", got \"%s\"\n", msg, expected, actual);
+    }
+}
+
 static void TestAdd(void)
 {
     CalcContext ctx;
@@ -11,6 +22,7 @@ static void TestAdd(void)
     calc_equals(&ctx);
     expect_display(&ctx, "19", "AC-01: 12 + 7 = 19");
     expect_result(&ctx, 19.0, "AC-01 result value");
+    expect_expression(&ctx, "12 + 7 =", "AC-01 expression text");
 }
 
 static void TestSub(void)
@@ -89,6 +101,7 @@ static void TestDivisionByZero(void)
     calc_equals(&ctx);
     TCHECK(calc_state(&ctx) == CALC_STATE_ERROR, "AC-07: division by zero enters error state");
     expect_display(&ctx, "Error: Division by zero", "AC-07: error message shown");
+    expect_expression(&ctx, "10 / 0 =", "AC-07: expression recorded on error");
 }
 
 static void TestErrorRecovery(void)
@@ -125,9 +138,12 @@ static void TestClear(void)
     enter_text(&ctx, "8");
     calc_select_operator(&ctx, CALC_OP_DIV);
     enter_text(&ctx, "2");
+    calc_equals(&ctx);
+    expect_expression(&ctx, "8 / 2 =", "expression before clear");
     calc_clear(&ctx);
     expect_display(&ctx, "0", "AC-09: clear empties display");
     TCHECK(calc_state(&ctx) == CALC_STATE_OPERAND1, "AC-09: clear resets all state");
+    expect_expression(&ctx, "", "AC-09: clear resets expression line");
 }
 
 static void TestOperatorReplace(void)
@@ -151,10 +167,12 @@ static void TestChainedCalculation(void)
     enter_text(&ctx, "3");
     calc_equals(&ctx);
     expect_display(&ctx, "5", "AC-12: 2 + 3 = 5");
+    expect_expression(&ctx, "2 + 3 =", "AC-12: first expression");
     calc_select_operator(&ctx, CALC_OP_MUL);
     enter_text(&ctx, "4");
     calc_equals(&ctx);
     expect_display(&ctx, "20", "AC-12: result reused, 5 x 4 = 20");
+    expect_expression(&ctx, "5 x 4 =", "AC-12: chained expression uses result as operand1");
 }
 
 static void TestResultAsFirstOperand(void)
@@ -213,8 +231,10 @@ static void TestNewInputAfterResult(void)
     calc_equals(&ctx);
     enter_text(&ctx, "9");
     expect_display(&ctx, "9", "typing after result starts fresh");
+    expect_expression(&ctx, "2 + 3 =", "previous expression kept while typing");
     calc_equals(&ctx);
     expect_display(&ctx, "9", "fresh operand standalone equals");
+    expect_expression(&ctx, "9 =", "expression updated on new equals");
 }
 
 static void TestOperatorAfterSecondOperand(void)

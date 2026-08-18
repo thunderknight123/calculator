@@ -33,6 +33,7 @@ int main(void)
         }
 
         ui_display_set(&display, DisplayStateFromCalc(calc.state), calc_display_text(&calc));
+        ui_display_set_expression(&display, calc_expression_text(&calc));
 
         BeginDrawing();
         ClearBackground((Color){ 245, 245, 245, 255 });

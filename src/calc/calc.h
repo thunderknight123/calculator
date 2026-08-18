@@ -37,6 +37,8 @@ typedef struct {
     double operand1;
     double result;
     char display[CALC_DISPLAY_MAX_CHARS];
+    char expression[CALC_DISPLAY_MAX_CHARS];
+    char operand1Text[CALC_OPERAND_MAX_CHARS + 1];
 } CalcContext;
 
 void calc_input_init(CalcInput *input);
@@ -58,6 +60,7 @@ void calc_select_operator(CalcContext *ctx, CalcOperator op);
 void calc_equals(CalcContext *ctx);
 void calc_clear(CalcContext *ctx);
 const char *calc_display_text(const CalcContext *ctx);
+const char *calc_expression_text(const CalcContext *ctx);
 CalcState calc_state(const CalcContext *ctx);
 double calc_operand_value(const CalcContext *ctx);
 double calc_result_value(const CalcContext *ctx);
