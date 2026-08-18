@@ -1,4 +1,4 @@
-# 计算器程序任务清单（task.md）
+﻿# 计算器程序任务清单（task.md）
 
 ## 0. 说明
 
@@ -28,21 +28,21 @@
 | T0-3 | 固定窗口与主循环 | `src\main.c` | T0-2 | 已完成 |
 | T1-1 | 显示屏渲染模块 | `src\ui\ui.h`、`src\ui\ui.c` | T0-2 | 已完成 |
 | T1-2 | 显示屏接入主循环 | `src\main.c`、`src\ui\ui.c` | T0-3、T1-1 | 已完成 |
-| T2-1 | 输入状态机实现 | `src\calc\calc.h`、`src\calc\calc.c` | T0-2 | 待办 |
-| T2-2 | 输入逻辑单元测试 | `tests\test_input.c` | T2-1 | 待办 |
-| T3-1 | 运算核心状态机 | `src\calc\calc.h`、`src\calc\calc.c` | T2-1 | 待办 |
-| T3-2 | 结果格式化 | `src\calc\calc.c` | T3-1 | 待办 |
-| T3-3 | 运算逻辑单元测试 | `tests\test_ops.c` | T3-2 | 待办 |
-| T4-1 | 按键网格布局 | `src\ui\ui.c` | T1-1 | 待办 |
-| T4-2 | 命中检测与视觉反馈 | `src\ui\ui.c` | T4-1 | 待办 |
-| T4-3 | 按键接入逻辑层 | `src\ui\ui.c`、`src\calc\calc.h` | T4-2、T3-1 | 待办 |
-| T5-1 | 键盘映射与共享输入入口 | `src\ui\ui.c`、`src\main.c` | T4-3、T3-1 | 待办 |
-| T5-2 | 双输入显示同步验证 | `src\main.c` | T5-1 | 待办 |
-| T6-1 | 错误状态输入门禁 | `src\calc\calc.c`、`src\ui\ui.c` | T3-1、T4-3 | 待办 |
-| T6-2 | 错误显示与恢复流程 | `src\ui\ui.c`、`src\main.c` | T6-1、T1-2 | 待办 |
-| T7-1 | 随机四则运算自动化测试 | `tests\test_random.c` | T3-3 | 待办 |
-| T7-2 | 全量验收走查 | 全部源码 | T4-3、T5-2、T6-2 | 待办 |
-| T7-3 | 性能与兼容性检查 | 构建产物 | T7-2 | 待办 |
+| T2-1 | 输入状态机实现 | `src\calc\calc.h`、`src\calc\calc.c` | T0-2 | 已完成 |
+| T2-2 | 输入逻辑单元测试 | `tests\test_input.c` | T2-1 | 已完成 |
+| T3-1 | 运算核心状态机 | `src\calc\calc.h`、`src\calc\calc.c` | T2-1 | 已完成 |
+| T3-2 | 结果格式化 | `src\calc\calc.c` | T3-1 | 运算核心状态机 | `src\calc\calc.h`、`src\calc\calc.c` | T2-1 | 已完成 |
+| T3-3 | 运算逻辑单元测试 | `tests\test_ops.c` | T3-2 | 结果格式化 | `src\calc\calc.c` | T3-1 | 已完成 |
+| T4-1 | 按键网格布局 | `src\ui\ui.c` | T1-1 | 已完成 |
+| T4-2 | 命中检测与视觉反馈 | `src\ui\ui.c` | T4-1 | 按键网格布局 | `src\ui\ui.c` | T1-1 | 已完成 |
+| T4-3 | 按键接入逻辑层 | `src\ui\ui.c`、`src\calc\calc.h` | T4-2、T3-1 | 已完成 |
+| T5-1 | 键盘映射与共享输入入口 | `src\ui\ui.c`、`src\main.c` | T4-3、T3-1 | 已完成 |
+| T5-2 | 双输入显示同步验证 | `src\main.c` | T5-1 | 键盘映射与共享输入入口 | `src\ui\ui.c`、`src\main.c` | T4-3、T3-1 | 已完成 |
+| T6-1 | 错误状态输入门禁 | `src\calc\calc.c`、`src\ui\ui.c` | T3-1、T4-3 | 已完成 |
+| T6-2 | 错误显示与恢复流程 | `src\ui\ui.c`、`src\main.c` | T6-1、T1-2 | 已完成 |
+| T7-1 | 随机四则运算自动化测试 | `tests\test_random.c` | T3-3 | 运算逻辑单元测试 | `tests\test_ops.c` | T3-2 | 已完成 |
+| T7-2 | 全量验收走查 | 全部源码 | T4-3、T5-2、T6-2 | 已完成 |
+| T7-3 | 性能与兼容性检查 | 构建产物 | T7-2 | 全量验收走查 | 全部源码 | T4-3、T5-2、T6-2 | 已完成 |
 
 ---
 
