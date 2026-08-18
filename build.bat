@@ -39,4 +39,18 @@ if errorlevel 1 exit /b 1
 
 echo.
 echo Build OK: build\calculator.exe
+
+echo.
+echo Building tests...
+cl /nologo /O2 /W3 /D_CRT_SECURE_NO_WARNINGS /Isrc\calc ^
+   /c src\calc\calc.c tests\test_input.c ^
+   /Fo:build\ /Fd:build\
+if errorlevel 1 exit /b 1
+
+link /nologo /subsystem:console ^
+     build\calc.obj build\test_input.obj ^
+     /out:build\test_input.exe
+if errorlevel 1 exit /b 1
+
+echo Build OK: build\test_input.exe
 endlocal
